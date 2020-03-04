@@ -245,22 +245,22 @@ def index(position):
 
 def generate_path(node, root):
     while (not np.array_equal(node.current, root)):
-        # f = open("nodePath.txt", "r+")
-        # content = f.read()
-        # f.seek(0, 0)
-        # toWrite = str(np.transpose(node.state).reshape(1, 9)[0])
+        f = open("nodePath.txt", "r+")
+        content = f.read()
+        f.seek(0, 0)
+        toWrite = str(node.current)
         print(node.current)
         node = node.parent
-        # f.write(toWrite[1:len(toWrite) - 1] + '\n' + content)
-        # f.close()
+        f.write(toWrite[1:len(toWrite) - 1] + '\n' + content)
+        f.close()
 
-    # f = open("nodePath.txt", "r+")
-    # content = f.read()
-    # f.seek(0, 0)
+    f = open("nodePath.txt", "r+")
+    content = f.read()
+    f.seek(0, 0)
     print(node.current)
-    # toWrite = str(np.transpose(node.state).reshape(1, 9)[0])
-    # f.write(toWrite[1:len(toWrite) - 1] + '\n' + content)
-    # f.close()
+    toWrite = str(node.current)
+    f.write(toWrite[1:len(toWrite) - 1] + '\n' + content)
+    f.close()
 
 # Functions for the action space - Up, Down, Left, Right, Up-Right, Down-Right, Up-left, Down-left
 
@@ -281,44 +281,44 @@ def main():
 
 
     # Plotting the trial map
-    # fig = plt.figure()
-    # plt.axes()
-    # circle = plt.Circle((160, 50), radius=15, fc='y')
-    # square = plt.Rectangle((90, 40), 20, 20, fc='r')
-    # line1 = plt.Line2D((0, 200), (100, 100), lw=2.5)
-    # line2 = plt.Line2D((0, 200), (0, 0), lw=2.5)
-    # line3 = plt.Line2D((0, 0), (0, 100), lw=2.5)
-    # line4 = plt.Line2D((200, 200), (0, 100), lw=2.5)
-    # plt.scatter(start_point[0], start_point[1])
-    # plt.scatter(goal_point[0], goal_point[1])
-    #
-    # plt.gca().add_line(line1)
-    # plt.gca().add_line(line2)
-    # plt.gca().add_line(line3)
-    # plt.gca().add_line(line4)
-    # plt.gca().add_patch(circle)
-    # plt.gca().add_patch(square)
-    # plt.axis('scaled')
+    fig = plt.figure()
+    plt.axes()
+    circle = plt.Circle((160, 50), radius=15, fc='y')
+    square = plt.Rectangle((90, 40), 20, 20, fc='r')
+    line1 = plt.Line2D((0, 200), (100, 100), lw=2.5)
+    line2 = plt.Line2D((0, 200), (0, 0), lw=2.5)
+    line3 = plt.Line2D((0, 0), (0, 100), lw=2.5)
+    line4 = plt.Line2D((200, 200), (0, 100), lw=2.5)
+    plt.scatter(start_point[0], start_point[1])
+    plt.scatter(goal_point[0], goal_point[1])
+
+    plt.gca().add_line(line1)
+    plt.gca().add_line(line2)
+    plt.gca().add_line(line3)
+    plt.gca().add_line(line4)
+    plt.gca().add_patch(circle)
+    plt.gca().add_patch(square)
+    plt.axis('scaled')
 
     start = Node(start_point, None, 0, index(start_point))
     goal = start.bfs(goal_point)
     generate_path(goal, start_point)
 
     # Animating the explored nodes
-    # file = open('Nodes.txt', 'r')
-    # points = file.readlines()
-    # for point in points:
-    # 	pts = point.split(',')
-    # 	# print(int(pts[0]), int(pts[1]))
-    # 	plt.scatter(int(pts[0]), int(pts[1]), c='g')
-    # 	# plt.pause(0.05)
-    # # for i in range(25):
-    # # 	new  = up(start_point)
-    # # 	start_point = new
-    # # 	plt.scatter(start_point[0], start_point[1])
-    # # 	plt.pause(0.25)
-    #
-    # plt.show()
+    file = open('nodePath.txt', 'r')
+    points = file.readlines()
+    for point in points:
+        pts = point.split(',')
+        # print(int(pts[0]), int(pts[1]))
+        plt.scatter(int(pts[0]), int(pts[1]), c='g')
+        # plt.pause(0.05)
+    # for i in range(25):
+    # 	new  = up(start_point)
+    # 	start_point = new
+    # 	plt.scatter(start_point[0], start_point[1])
+    # 	plt.pause(0.25)
+
+    plt.show()
 
 if __name__ == '__main__':
     main()
