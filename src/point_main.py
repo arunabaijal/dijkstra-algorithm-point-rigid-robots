@@ -231,6 +231,16 @@ def check_node(node):
     elif (3*node[0]-5*node[1]>450) and (3*node[0]+5*node[1]<900) and (3*node[0]-5*node[1]<600) and (3*node[0]+5*node[1]>750):
         print('Sorry the point is in the obstacle space! Try again.')
         return False
+    elif (1.732*node[0]-node[1]<134.54) and ( 0.577*node[0]+node[1]<96.36) and (node[1]+0.577*node[0]>84.849) and (node[1]+1.732*node[0]>15.453):
+        print('Sorry the point is in the obstacle space! Try again.')
+        return False
+    # Dividing concave shape into 2 convex shapes
+    elif (node[1]<185) and (node[1]+1.4*node[0]<290) and (1.2*node[0]-node[1]<-30) and (node[1]+1.2*node[0]>210):
+        print('Sorry the point is in the obstacle space! Try again.')
+        return False
+    elif (node[1]+1.4*node[0]<220) and (node[0]-node[1]<-100) and (13*node[0]-node[1]>140):
+        print('Sorry the point is in the obstacle space! Try again.')
+        return False
     else:
         return True
 
@@ -334,11 +344,11 @@ def main():
     line7 = plt.Line2D((250, 225), (30, 15), lw=2.5)
     line8 = plt.Line2D((225, 200), (15, 30), lw=2.5)
 
-    # Lines for the tilted cuboid   7lx"{_
+    # Lines for the tilted cuboid
     line9 = plt.Line2D((95,  100), (30, 38.66), lw=2.5)
-    line10 = plt.Line2D((95, 95-37.5*np.sqrt(3)), (30, 67.5), lw=2.5)
-    line11 = plt.Line2D((95-37.5*np.sqrt(3), 95-37.5*np.sqrt(3)+5), (67.5, 67.5+5*np.sqrt(3)), lw=2.5)
-    line12 = plt.Line2D((95-37.5*np.sqrt(3)+5, 100), (67.5+5*np.sqrt(3), 38.66), lw=2.5)
+    line10 = plt.Line2D((100, 35.05), (38.66, 76.16), lw=2.5)
+    line11 = plt.Line2D((35.05, 30.05), (76.16, 67.5), lw=2.5)
+    line12 = plt.Line2D((30.05, 95), (67.5, 30), lw=2.5)
 
     # Lines for the concave shape
     line13 = plt.Line2D((20,  25), (120, 185), lw=2.5)
