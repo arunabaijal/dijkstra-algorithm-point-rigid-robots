@@ -189,7 +189,7 @@ class Node():
         f.close()
         return False
 
-def create_graph(xmax = 200, ymax = 100):
+def create_graph(xmax = 300, ymax = 200):
     graph = np.ones((ymax, xmax))
     for i in range(xmax):
         for j in range(ymax):
@@ -245,7 +245,7 @@ def check_node(node):
         return True
 
 def index(position):
-    return position[0] + position[1]*200
+    return position[0] + position[1]*300
 
 def generate_path(node, root):
     while (not np.array_equal(node.current, root)):
