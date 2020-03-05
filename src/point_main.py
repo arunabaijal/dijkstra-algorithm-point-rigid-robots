@@ -231,7 +231,7 @@ def check_node(node):
     elif (3*node[0]-5*node[1]>450) and (3*node[0]+5*node[1]<900) and (3*node[0]-5*node[1]<600) and (3*node[0]+5*node[1]>750):
         print('Sorry the point is in the obstacle space! Try again.')
         return False
-    elif (1.732*node[0]-node[1]<134.54) and ( 0.577*node[0]+node[1]<96.36) and (node[1]+0.577*node[0]>84.849) and (node[1]+1.732*node[0]>15.453):
+    elif (1.732*node[0]-node[1]<134.54) and ( 0.577*node[0]+node[1]<96.36) and (node[1]+0.577*node[0]>84.849) and (1.732*node[0] - node[1]>-15.453):
         print('Sorry the point is in the obstacle space! Try again.')
         return False
     # Dividing concave shape into 2 convex shapes
@@ -379,14 +379,28 @@ def main():
     plt.gca().add_line(line18)
     plt.gca().add_patch(circle)
     plt.axis('scaled')
-    
-    plt.scatter(start_point[0], start_point[1])
-    plt.scatter(goal_point[0], goal_point[1])
 
     t = np.linspace(0, 2*pi, 100)
     plt.plot( u+a*np.cos(t) , v+b*np.sin(t) )
     plt.grid(color='lightgray',linestyle='--')
 
+    start = Node(start_point, None, 0, index(start_point))
+    goal = start.dijkstra(goal_point)
+    open('nodePath.txt', 'w').close()
+    generate_path(goal, start_point)
+
+    # Animating the explored nodes
+    file = open('Nodes.txt', 'r')
+    points = file.readlines()
+    for point in points:
+        pts = point.split(',')
+        plt.scatter(int(pts[0]), int(pts[1]), c='b', s= 6)
+        # plt.pause(0.05)
+    file = open('nodePath.txt', 'r')
+    points = file.readlines()
+    for point in points:
+        pts = point.split(',')
+        plt.scatter(int(pts[0]), int(pts[1]), c='g', s=6)
     plt.show()
 if __name__ == '__main__':
     main()
