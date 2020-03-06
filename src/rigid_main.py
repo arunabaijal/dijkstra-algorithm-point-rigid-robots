@@ -230,14 +230,14 @@ def new_points(point, clearance, direction):
 # Function to generate new points for the concave polygon
 def new_points_pol(point, point0, point1, point3, clearance, direction):
     if direction == 0:
-        #slope1 = (point1[1] - point[1]) / (point1[0] - point[0])
-        #a1 = 90 - math.degrees(math.atan(slope1))
-        #l1 = clearance/math.sin(math.radians(a1))
-        #x1 = l1*math.sin(math.radians(a1))
-        #y1 = l1*math.cos(math.radians(a1))       
-        #point[0] = point[0] - x1 
-        #point[1] = point[1] - y1 
-        point[1] = point[1] - np.sqrt(2)*clearance
+        slope1 = (point1[1] - point[1]) / (point1[0] - point[0])
+        a1 = (90 - math.degrees(math.atan(slope1)))/2
+        l1 = clearance/math.sin(math.radians(a1))
+        x1 = l1*math.sin(math.radians(a1))
+        y1 = l1*math.cos(math.radians(a1))       
+        point[0] = point[0] - x1 
+        point[1] = point[1] - y1 
+        #point[1] = point[1] - np.sqrt(2)*clearance
     elif direction == 1:
         point[1] = point[1] - np.sqrt(2)*clearance
     elif direction == 2:
@@ -260,8 +260,8 @@ def new_points_pol(point, point0, point1, point3, clearance, direction):
         point[0] = point[0] + x4 
         point[1] = point[1] + y4 
     else:
-        slope5 = (point0[1] - point[1]) / (point0[0] - point[0])
-        a5 = 90 - (180 - math.degrees(math.atan(slope5)))
+        slope5 = (point[1] - point1[1]) / (point[0] - point1[0])
+        a5 = 180 - math.degrees(math.atan(slope5))
         l5 = clearance/math.sin(math.radians(a5))
         x5 = l5*math.cos(math.radians(a5))
         y5 = l5*math.sin(math.radians(a5))       
@@ -353,9 +353,9 @@ def check_node(node):
     elif (a10*node[0] + b10*node[1]>c10) and (a11*node[0] + b11*node[1]>c11) and (a12*node[0] + b12*node[1]>c12) and (a13*node[0] + b13*node[1]<c13):
         print('Sorry the point is in the obstacle space! Try again.4')
         return False
-    #elif (a10*node[0] + b10*node[1]<c10) and (a14*node[0] + b14*node[1]<c14) and (a9*node[0] + b9*node[1]>c9):
-        #print('Sorry the point is in the obstacle space! Try again.5')
-        #return False
+    elif (a10*node[0] + b10*node[1]<c10) and (a14*node[0] + b14*node[1]>c14) and (a9*node[0] + b9*node[1]>c9):
+        print('Sorry the point is in the obstacle space! Try again.5')
+        return False
     else:
         return True
 
