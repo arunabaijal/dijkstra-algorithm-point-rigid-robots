@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import queue
 from math import pi
+import time
 
 class Node():
     def __init__(self, start_point, parent, cost2come, ind):
@@ -141,7 +142,6 @@ class Node():
                     new_node = Node(new, visitingNode, visitingNode.cost2come + np.sqrt(2), new_index)
                     if new_index not in visited:
                         if new_index in accepted:
-                            print(accepted[new_index].cost2come, new_node.cost2come)
                             if accepted[new_index].cost2come > new_node.cost2come:
                                 accepted[new_index] = new_node
                                 toBeVisited.put(new_node)
@@ -188,14 +188,6 @@ class Node():
                 visited[visitingNode.index] = visitingNode
         f.close()
         return False
-
-def create_graph(xmax = 300, ymax = 200):
-    graph = np.ones((ymax, xmax))
-    for i in range(xmax):
-        for j in range(ymax):
-            if not check_node([i,j]):
-                graph[j][i] = 0
-    return graph
 
 """
 # Function to check if the given point lies outside the trial map or in the obstacle space
@@ -281,7 +273,7 @@ def main():
         goal_point = eval(input('Please enter the goal point in this format - [x,y]: '))
 
     print('The goal point you gave is:', goal_point)
-
+    start_time = time.time()
     """
     # Plotting the trial map
     fig = plt.figure()
@@ -388,19 +380,22 @@ def main():
     goal = start.dijkstra(goal_point)
     open('nodePath.txt', 'w').close()
     generate_path(goal, start_point)
-
+    end_time = time.time()
+    print('Time taken to find path: ' + str(end_time - start_time))
     # Animating the explored nodes
     file = open('Nodes.txt', 'r')
     points = file.readlines()
     for point in points:
         pts = point.split(',')
         plt.scatter(int(pts[0]), int(pts[1]), c='b', s= 6)
-        # plt.pause(0.05)
+        plt.pause(0.05)
     file = open('nodePath.txt', 'r')
     points = file.readlines()
     for point in points:
         pts = point.split(',')
         plt.scatter(int(pts[0]), int(pts[1]), c='g', s=6)
     plt.show()
+    graph_end_time = time.time()
+    print('Time taken to animate paths: ' + str(graph_end_time - end_time))
 if __name__ == '__main__':
     main()

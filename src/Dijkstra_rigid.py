@@ -1,70 +1,72 @@
-# *********************************** Point Robot ********************************#
+# *********************************** Rigid Robot ********************************#
 import matplotlib.pyplot as plt
 import numpy as np
 import queue
 import math
 from math import pi
+import time
 
 
 class Node():
-    def __init__(self, start_point, parent, cost2come, ind):
+    def __init__(self, start_point, parent, cost2come, ind, clear_val):
         self.current = start_point
         self.parent = parent
         self.cost2come = cost2come
         self.index = ind
+        self.clear_val = clear_val
 
     def moveDown(self):
         new_position = [self.current[0], self.current[1] - 1]
-        if check_node(new_position):
+        if check_node(new_position, self.clear_val):
             return new_position, 'down'
         else:
             return False
 
     def moveUp(self):
         new_position = [self.current[0], self.current[1] + 1]
-        if not check_node(new_position):
+        if not check_node(new_position, self.clear_val):
             return False
         else:
             return new_position, 'up'
 
     def moveRight(self):
         new_position = [self.current[0] + 1, self.current[1]]
-        if not check_node(new_position):
+        if not check_node(new_position, self.clear_val):
             return False
         else:
             return new_position, 'right'
 
     def moveLeft(self):
         new_position = [self.current[0] - 1, self.current[1]]
-        if not check_node(new_position):
+        if not check_node(new_position, self.clear_val):
             return False
         else:
             return new_position, 'left'
 
     def moveDownRight(self):
         new_position = [self.current[0] + 1, self.current[1] - 1]
-        if check_node(new_position):
+        if check_node(new_position, self.clear_val):
             return new_position, 'down right'
         else:
             return False
 
     def moveDownLeft(self):
         new_position = [self.current[0] - 1, self.current[1] - 1]
-        if not check_node(new_position):
+        if not check_node(new_position, self.clear_val):
             return False
         else:
             return new_position, 'down left'
 
     def moveUpRight(self):
         new_position = [self.current[0] + 1, self.current[1] + 1]
-        if not check_node(new_position):
+        if not check_node(new_position, self.clear_val):
             return False
         else:
             return new_position, 'up right'
 
     def moveUpLeft(self):
         new_position = [self.current[0] - 1, self.current[1] + 1]
-        if not check_node(new_position):
+        if not check_node(new_position, self.clear_val):
             return False
         else:
             return new_position, 'up left'
@@ -92,7 +94,7 @@ class Node():
                 if visitingNode.moveUp():
                     new, up = visitingNode.moveUp()
                     new_index = index(new)
-                    new_node = Node(new, visitingNode, visitingNode.cost2come + 1, new_index)
+                    new_node = Node(new, visitingNode, visitingNode.cost2come + 1, new_index, visitingNode.clear_val)
                     if new_index not in visited:
                         if new_index in accepted:
                             if accepted[new_index].cost2come > new_node.cost2come:
@@ -104,7 +106,7 @@ class Node():
                 if visitingNode.moveDown():
                     new, down = visitingNode.moveDown()
                     new_index = index(new)
-                    new_node = Node(new, visitingNode, visitingNode.cost2come + 1, new_index)
+                    new_node = Node(new, visitingNode, visitingNode.cost2come + 1, new_index, visitingNode.clear_val)
                     if new_index not in visited:
                         if new_index in accepted:
                             if accepted[new_index].cost2come > new_node.cost2come:
@@ -116,7 +118,7 @@ class Node():
                 if visitingNode.moveRight():
                     new, right = visitingNode.moveRight()
                     new_index = index(new)
-                    new_node = Node(new, visitingNode, visitingNode.cost2come + 1, new_index)
+                    new_node = Node(new, visitingNode, visitingNode.cost2come + 1, new_index, visitingNode.clear_val)
                     if new_index not in visited:
                         if new_index in accepted:
                             if accepted[new_index].cost2come > new_node.cost2come:
@@ -128,7 +130,7 @@ class Node():
                 if visitingNode.moveLeft():
                     new, left = visitingNode.moveLeft()
                     new_index = index(new)
-                    new_node = Node(new, visitingNode, visitingNode.cost2come + 1, new_index)
+                    new_node = Node(new, visitingNode, visitingNode.cost2come + 1, new_index, visitingNode.clear_val)
                     if new_index not in visited:
                         if new_index in accepted:
                             if accepted[new_index].cost2come > new_node.cost2come:
@@ -140,7 +142,7 @@ class Node():
                 if visitingNode.moveUpRight():
                     new, upRight = visitingNode.moveUpRight()
                     new_index = index(new)
-                    new_node = Node(new, visitingNode, visitingNode.cost2come + np.sqrt(2), new_index)
+                    new_node = Node(new, visitingNode, visitingNode.cost2come + np.sqrt(2), new_index, visitingNode.clear_val)
                     if new_index not in visited:
                         if new_index in accepted:
                             if accepted[new_index].cost2come > new_node.cost2come:
@@ -152,7 +154,7 @@ class Node():
                 if visitingNode.moveDownRight():
                     new, downRight = visitingNode.moveDownRight()
                     new_index = index(new)
-                    new_node = Node(new, visitingNode, visitingNode.cost2come + np.sqrt(2), new_index)
+                    new_node = Node(new, visitingNode, visitingNode.cost2come + np.sqrt(2), new_index, visitingNode.clear_val)
                     if new_index not in visited:
                         if new_index in accepted:
                             if accepted[new_index].cost2come > new_node.cost2come:
@@ -164,7 +166,7 @@ class Node():
                 if visitingNode.moveUpLeft():
                     new, upLeft = visitingNode.moveUpLeft()
                     new_index = index(new)
-                    new_node = Node(new, visitingNode, visitingNode.cost2come + np.sqrt(2), new_index)
+                    new_node = Node(new, visitingNode, visitingNode.cost2come + np.sqrt(2), new_index, visitingNode.clear_val)
                     if new_index not in visited:
                         if new_index in accepted:
                             if accepted[new_index].cost2come > new_node.cost2come:
@@ -176,7 +178,7 @@ class Node():
                 if visitingNode.moveDownLeft():
                     new, downLeft = visitingNode.moveDownLeft()
                     new_index = index(new)
-                    new_node = Node(new, visitingNode, visitingNode.cost2come + np.sqrt(2), new_index)
+                    new_node = Node(new, visitingNode, visitingNode.cost2come + np.sqrt(2), new_index, visitingNode.clear_val)
                     if new_index not in visited:
                         if new_index in accepted:
                             if accepted[new_index].cost2come > new_node.cost2come:
@@ -189,15 +191,6 @@ class Node():
                 visited[visitingNode.index] = visitingNode
         f.close()
         return False
-
-
-def create_graph(xmax=300, ymax=200):
-    graph = np.ones((ymax, xmax))
-    for i in range(xmax):
-        for j in range(ymax):
-            if not check_node([i, j]):
-                graph[j][i] = 0
-    return graph
 
 
 """
@@ -277,13 +270,13 @@ def eqn(point1, point2):
     return a,b,c
 
 # Function to check if the given point lies outside the final map or in the obstacle space
-def check_node(node):
+def check_node(node, clearance):
     u = 150.  # x-position of the center
     v = 100.  # y-position of the center
     a = 40.  # radius on the x-axis
     b = 20.  # radius on the y-axis
     
-    clear_val = 5
+    clear_val = clearance
 
     # New points for diamond obstacle
     p1 = new_points([225,15], clear_val, 0)
@@ -332,7 +325,7 @@ def check_node(node):
     a14,b14,c14 = eqn(p14,p9)  
     a15,b15,c15 = eqn(p14,p11)
     
-    if node[0] >= 300 or node[0] < 0 or node[1]>= 200 or node[1]< 0:
+    if node[0] + clearance >= 300 or node[0] - clearance < 0 or node[1] + clearance>= 200 or node[1] - clearance< 0:
         print('Sorry the point is out of bounds! Try again.')
         return False
     elif (node[0] - 225) ** 2 + (node[1] - 150) ** 2 < (25+clear_val) ** 2 :
@@ -386,60 +379,22 @@ def generate_path(node, root):
 
 def main():
     # Taking start point and goal point from the user
+    radius = eval(input('Please enter robot radius value: '))
+    clearance = eval(input('Please enter robot clearance value: '))
     start_point = eval(input('Please enter the start point in this format - [x,y]: '))
-    while not check_node(start_point):
+    while not check_node(start_point, radius+clearance):
         start_point = eval(input('Please enter the start point in this format - [x,y]: '))
 
     print('The start point you gave is:', start_point)
     print('')
 
     goal_point = eval(input('Please enter the goal point in this format - [x,y]: '))
-    while not check_node(goal_point):
+    while not check_node(goal_point, radius+clearance):
         goal_point = eval(input('Please enter the goal point in this format - [x,y]: '))
 
     print('The goal point you gave is:', goal_point)
+    start_time = time.time()
 
-    """
-    # Plotting the trial map
-    fig = plt.figure()
-    plt.axes()
-    circle = plt.Circle((160, 50), radius=15, fc='y')
-    square = plt.Rectangle((90, 40), 20, 20, fc='r')
-    line1 = plt.Line2D((0, 200), (100, 100), lw=2.5)
-    line2 = plt.Line2D((0, 200), (0, 0), lw=2.5)
-    line3 = plt.Line2D((0, 0), (0, 100), lw=2.5)
-    line4 = plt.Line2D((200, 200), (0, 100), lw=2.5)
-    plt.scatter(start_point[0], start_point[1])
-    plt.scatter(goal_point[0], goal_point[1])
-
-    plt.gca().add_line(line1)
-    plt.gca().add_line(line2)
-    plt.gca().add_line(line3)
-    plt.gca().add_line(line4)
-    plt.gca().add_patch(circle)
-    plt.gca().add_patch(square)
-    plt.axis('scaled')
-
-    start = Node(start_point, None, 0, index(start_point))
-    goal = start.dijkstra(goal_point)
-    open('nodePath.txt', 'w').close()
-    generate_path(goal, start_point)
-
-    # Animating the explored nodes
-    file = open('Nodes.txt', 'r')
-    points = file.readlines()
-    for point in points:
-        pts = point.split(',')
-        plt.scatter(int(pts[0]), int(pts[1]), c='b')
-        # plt.pause(0.05)
-    file = open('nodePath.txt', 'r')
-    points = file.readlines()
-    for point in points:
-        pts = point.split(',')
-        plt.scatter(int(pts[0]), int(pts[1]), c='g')
-
-    plt.show()
-    """
     # Plotting the final map
 
     u = 150.  # x-position of the center
@@ -500,10 +455,12 @@ def main():
     plt.plot(u + a * np.cos(t), v + b * np.sin(t))
     plt.grid(color='lightgray', linestyle='--')
 
-    start = Node(start_point, None, 0, index(start_point))
+    start = Node(start_point, None, 0, index(start_point), radius+clearance)
     goal = start.dijkstra(goal_point)
     open('nodePath.txt', 'w').close()
     generate_path(goal, start_point)
+    end_time = time.time()
+    print('Time taken to find path: ' + str(end_time - start_time))
 
     # Animating the explored nodes
     file = open('Nodes.txt', 'r')
@@ -511,13 +468,15 @@ def main():
     for point in points:
          pts = point.split(',')
          plt.scatter(int(pts[0]), int(pts[1]), c='b', s=6)
-         # plt.pause(0.05)
+         plt.pause(0.05)
     file = open('nodePath.txt', 'r')
     points = file.readlines()
     for point in points:
         pts = point.split(',')
         plt.scatter(int(pts[0]), int(pts[1]), c='g', s=5)
     plt.show()
+    graph_end_time = time.time()
+    print('Time taken to animate paths: ' + str(graph_end_time - end_time))
 
 
 if __name__ == '__main__':
