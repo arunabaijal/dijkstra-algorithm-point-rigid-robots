@@ -350,7 +350,7 @@ def check_node(node):
         print('Sorry the point is in the obstacle space! Try again. hello')
         return False
     # Dividing concave shape into 2 convex shapes
-    elif (a10*node[0] + b10*node[1]>c10) and (a11*node[0] + b11*node[1]>c11) and (a12*node[0] + b12*node[1]>c12) and (a13*node[0] + b13*node[1]<c13):
+    elif (a10*node[0] + b10*node[1]>c10) and (a11*node[0] + b11*node[1]>c11) and (a12*node[0] + b12*node[1]>c12) and (a13*node[0] + b13*node[1]>c13):
         print('Sorry the point is in the obstacle space! Try again.4')
         return False
     elif (a10*node[0] + b10*node[1]<c10) and (a14*node[0] + b14*node[1]>c14) and (a9*node[0] + b9*node[1]>c9):
