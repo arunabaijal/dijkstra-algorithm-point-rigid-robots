@@ -214,6 +214,40 @@ def check_node(node):
     else:
         return True
 """
+def line_equation(pointA, pointB):
+    a = pointB[1] - pointA[1]
+    b = pointA[0] - pointB[0]
+    c = a * (pointA[0]) + b * (pointA[1])
+    return a,b,c
+
+def generate_line_equation(pointA, pointB, clearance, direction):
+    a = pointB[1] - pointA[1]
+    b = pointA[0] - pointB[0]
+    hyp = np.sqrt(b**2 + a**2)
+    xDiff = clearance*a/hyp
+    yDiff = clearance*b/hyp
+    if direction == 0:
+        pointA[0] = pointA[0] - xDiff
+        pointA[1] = pointA[1] - yDiff
+        pointB[0] = pointB[0] + xDiff
+        pointB[0] = pointB[0] - yDiff
+    elif direction == 1:
+        pointA[0] = pointA[0] + xDiff
+        pointA[1] = pointA[1] + yDiff
+        pointB[0] = pointB[0] - xDiff
+        pointB[0] = pointB[0] + yDiff
+    elif direction == 2:
+        pointA[0] = pointA[0] + xDiff
+        pointA[1] = pointA[1] - yDiff
+        pointB[0] = pointB[0] - xDiff
+        pointB[0] = pointB[0] + yDiff
+    elif direction == 3:
+        pointA[0] = pointA[0] - xDiff
+        pointA[1] = pointA[1] - yDiff
+        pointB[0] = pointB[0] + xDiff
+        pointB[0] = pointB[0] - yDiff
+
+    return line_equation(pointA, pointB)
 
 
 # Function to check if the given point lies outside the final map or in the obstacle space
@@ -224,6 +258,11 @@ def check_node(node):
     b = 20.  # radius on the y-axis
 
     clearance = 5
+
+    line1obst4 = generate_line_equation([30.05,67.5],[95,30], clearance, 0)
+    line2obst4 = generate_line_equation([95,30],[100,38.66], clearance, 3)
+    line3obst4 = generate_line_equation([100,38.66],[35.05,76.16], clearance, 2)
+    line4obst4 = generate_line_equation([35.05,76.16],[30.05,67.5], clearance, 1)
 
 
     if node[0] + clearance >= 300 or node[0] - clearance < 0 or node[1] + clearance >= 200 or node[1] - clearance < 0:
@@ -239,8 +278,11 @@ def check_node(node):
             3 * node[0] - 5 * node[1] < 600 - clearance) and (3 * node[0] + 5 * node[1] > 750 + clearance):
         print('Sorry the point is in the obstacle space! Try again.3')
         return False
-    elif (1.732 * node[0] - node[1] < 134.54 - clearance) and (0.577 * node[0] + node[1] < 96.36 - clearance) and (
-            node[1] + 0.577 * node[0] > 84.849 + clearance) and (1.732 * node[0] - node[1] > -15.453 + clearance):
+    # elif (1.732 * node[0] - node[1] < 134.54) and (0.577 * node[0] + node[1] < 96.36) and (
+    #         node[1] + 0.577 * node[0] > 84.849) and (1.732 * node[0] - node[1] > -15.453):
+    #     print('Sorry the point is in the obstacle space! Try again. hello')
+    #     return False
+    elif (line1obst4[0]*node[0] + line1obst4[1]*node[0] > line1obst4[2]) and (line2obst4[0]*node[0] + line2obst4[1]*node[0] < line2obst4[2]) and (line3obst4[0]*node[0] + line3obst4[1]*node[0] < line3obst4[2]) and (line4obst4[0]*node[0] + line4obst4[1]*node[0] > line4obst4[2]):
         print('Sorry the point is in the obstacle space! Try again. hello')
         return False
     # Dividing concave shape into 2 convex shapes
