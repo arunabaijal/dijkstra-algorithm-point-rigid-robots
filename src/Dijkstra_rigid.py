@@ -328,25 +328,25 @@ def check_node(node, clearance):
     if node[0] + clearance >= 300 or node[0] - clearance < 0 or node[1] + clearance>= 200 or node[1] - clearance< 0:
         print('Sorry the point is out of bounds! Try again.')
         return False
-    elif (node[0] - 225) ** 2 + (node[1] - 150) ** 2 < (25+clear_val) ** 2 :
+    elif (node[0] - 225) ** 2 + (node[1] - 150) ** 2 <= (25+clear_val) ** 2 :
         print('Sorry the point is in the obstacle space! Try again.1')
         return False
-    elif ((node[0] - 150) ** 2) / (a+clear_val) ** 2 + ((node[1] - 100) ** 2) / (b+clear_val) ** 2 < 1:
+    elif ((node[0] - 150) ** 2) / (a+clear_val) ** 2 + ((node[1] - 100) ** 2) / (b+clear_val) ** 2 <= 1:
         print('Sorry the point is in the obstacle space! Try again.2')
         return False
-    elif (a1*node[0] + b1*node[1]>c1) and (a2*node[0] + b2*node[1]>c2) and (
-            a3*node[0] + b3*node[1]>c3) and (a4*node[0] + b4*node[1]>c4):
+    elif (a1*node[0] + b1*node[1]>=c1) and (a2*node[0] + b2*node[1]>=c2) and (
+            a3*node[0] + b3*node[1]>=c3) and (a4*node[0] + b4*node[1]>=c4):
         print('Sorry the point is in the obstacle space! Try again.3')
         return False
-    elif (a5*node[0] + b5*node[1]>c5) and (a6*node[0] + b6*node[1]>c6) and (
-            a7*node[0] + b7*node[1]>c7) and (a8*node[0] + b8*node[1]>c8):
+    elif (a5*node[0] + b5*node[1]>=c5) and (a6*node[0] + b6*node[1]>=c6) and (
+            a7*node[0] + b7*node[1]>=c7) and (a8*node[0] + b8*node[1]>=c8):
         print('Sorry the point is in the obstacle space! Try again. hello')
         return False
     # Dividing concave shape into 2 convex shapes
-    elif (a10*node[0] + b10*node[1]>c10) and (a11*node[0] + b11*node[1]>c11) and (a12*node[0] + b12*node[1]>c12) and (a13*node[0] + b13*node[1]>c13):
+    elif (a10*node[0] + b10*node[1]>=c10) and (a11*node[0] + b11*node[1]>=c11) and (a12*node[0] + b12*node[1]>=c12) and (a13*node[0] + b13*node[1]>=c13):
         print('Sorry the point is in the obstacle space! Try again.4')
         return False
-    elif (a10*node[0] + b10*node[1]<c10) and (a14*node[0] + b14*node[1]>c14) and (a9*node[0] + b9*node[1]>c9):
+    elif (a10*node[0] + b10*node[1]<=c10) and (a14*node[0] + b14*node[1]>=c14) and (a9*node[0] + b9*node[1]>=c9):
         print('Sorry the point is in the obstacle space! Try again.5')
         return False
     else:
@@ -404,31 +404,31 @@ def main():
 
     fig = plt.figure()
     plt.axes()
-    circle = plt.Circle((225, 150), radius=25, fc='y')
-    line1 = plt.Line2D((0, 300), (200, 200), lw=2.5)
-    line2 = plt.Line2D((0, 300), (0, 0), lw=2.5)
-    line3 = plt.Line2D((0, 0), (0, 200), lw=2.5)
-    line4 = plt.Line2D((300, 300), (0, 200), lw=2.5)
+    circle = plt.Circle((225, 150), radius=25)
+    line1 = plt.Line2D((0, 300), (200, 200), lw=1)
+    line2 = plt.Line2D((0, 300), (0, 0), lw=1)
+    line3 = plt.Line2D((0, 0), (0, 200), lw=1)
+    line4 = plt.Line2D((300, 300), (0, 200), lw=1)
 
     # Lines for the diamond
-    line5 = plt.Line2D((200, 225), (30, 45), lw=2.5)
-    line6 = plt.Line2D((225, 250), (45, 30), lw=2.5)
-    line7 = plt.Line2D((250, 225), (30, 15), lw=2.5)
-    line8 = plt.Line2D((225, 200), (15, 30), lw=2.5)
+    line5 = plt.Line2D((200, 225), (30, 45), lw=1)
+    line6 = plt.Line2D((225, 250), (45, 30), lw=1)
+    line7 = plt.Line2D((250, 225), (30, 15), lw=1)
+    line8 = plt.Line2D((225, 200), (15, 30), lw=1)
 
     # Lines for the tilted cuboid
-    line9 = plt.Line2D((95, 100), (30, 38.66), lw=2.5)
-    line10 = plt.Line2D((100, 35.05), (38.66, 76.16), lw=2.5)
-    line11 = plt.Line2D((35.05, 30.05), (76.16, 67.5), lw=2.5)
-    line12 = plt.Line2D((30.05, 95), (67.5, 30), lw=2.5)
+    line9 = plt.Line2D((95, 100), (30, 38.66), lw=1)
+    line10 = plt.Line2D((100, 35.05), (38.66, 76.16), lw=1)
+    line11 = plt.Line2D((35.05, 30.05), (76.16, 67.5), lw=1)
+    line12 = plt.Line2D((30.05, 95), (67.5, 30), lw=1)
 
     # Lines for the concave shape
-    line13 = plt.Line2D((20, 25), (120, 185), lw=2.5)
-    line14 = plt.Line2D((25, 75), (185, 185), lw=2.5)
-    line15 = plt.Line2D((75, 100), (185, 150), lw=2.5)
-    line16 = plt.Line2D((100, 75), (150, 120), lw=2.5)
-    line17 = plt.Line2D((75, 50), (120, 150), lw=2.5)
-    line18 = plt.Line2D((50, 20), (150, 120), lw=2.5)
+    line13 = plt.Line2D((20, 25), (120, 185), lw=1)
+    line14 = plt.Line2D((25, 75), (185, 185), lw=1)
+    line15 = plt.Line2D((75, 100), (185, 150), lw=1)
+    line16 = plt.Line2D((100, 75), (150, 120), lw=1)
+    line17 = plt.Line2D((75, 50), (120, 150), lw=1)
+    line18 = plt.Line2D((50, 20), (150, 120), lw=1)
 
     plt.gca().add_line(line1)
     plt.gca().add_line(line2)
@@ -467,13 +467,13 @@ def main():
     points = file.readlines()
     for point in points:
          pts = point.split(',')
-         plt.scatter(int(pts[0]), int(pts[1]), c='b', s=6)
-         plt.pause(0.05)
+         plt.scatter(int(pts[0]), int(pts[1]), c='b', s=radius)
+         plt.pause(0.000000001)
     file = open('nodePath.txt', 'r')
     points = file.readlines()
     for point in points:
         pts = point.split(',')
-        plt.scatter(int(pts[0]), int(pts[1]), c='g', s=5)
+        plt.scatter(int(pts[0]), int(pts[1]), c='g', s=radius)
     plt.show()
     graph_end_time = time.time()
     print('Time taken to animate paths: ' + str(graph_end_time - end_time))
