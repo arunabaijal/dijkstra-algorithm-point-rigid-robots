@@ -1,9 +1,8 @@
 #*********************************** Point Robot ********************************#
-import matplotlib.pyplot as plt
 import numpy as np
 import queue
-from math import pi
 import time
+import cv2
 
 class Node():
     def __init__(self, start_point, parent, cost2come, ind):
@@ -256,6 +255,39 @@ def generate_path(node, root):
     f.write(toWrite[1:len(toWrite) - 1] + '\n' + content)
     f.close()
 
+def get_line(x1, y1, x2, y2):
+    points = []
+    issteep = abs(y2-y1) > abs(x2-x1)
+    if issteep:
+        x1, y1 = y1, x1
+        x2, y2 = y2, x2
+    rev = False
+    if x1 > x2:
+        x1, x2 = x2, x1
+        y1, y2 = y2, y1
+        rev = True
+    deltax = x2 - x1
+    deltay = abs(y2-y1)
+    error = int(deltax / 2)
+    y = y1
+    ystep = None
+    if y1 < y2:
+        ystep = 1
+    else:
+        ystep = -1
+    for x in range(x1, x2 + 1):
+        if issteep:
+            points.append((y, x))
+        else:
+            points.append((x, y))
+        error -= deltay
+        if error < 0:
+            y += ystep
+            error += deltax
+    # Reverse the list if the coordinates were reversed
+    if rev:
+        points.reverse()
+    return points
 # Functions for the action space - Up, Down, Left, Right, Up-Right, Down-Right, Up-left, Down-left
 
 def main():
@@ -266,7 +298,6 @@ def main():
 
     print('The start point you gave is:', start_point)
     print('')
-    
 
     goal_point = eval(input('Please enter the goal point in this format - [x,y]: '))
     while not check_node(goal_point):
@@ -274,127 +305,70 @@ def main():
 
     print('The goal point you gave is:', goal_point)
     start_time = time.time()
-    """
-    # Plotting the trial map
-    fig = plt.figure()
-    plt.axes()
-    circle = plt.Circle((160, 50), radius=15, fc='y')
-    square = plt.Rectangle((90, 40), 20, 20, fc='r')
-    line1 = plt.Line2D((0, 200), (100, 100), lw=2.5)
-    line2 = plt.Line2D((0, 200), (0, 0), lw=2.5)
-    line3 = plt.Line2D((0, 0), (0, 100), lw=2.5)
-    line4 = plt.Line2D((200, 200), (0, 100), lw=2.5)
-    plt.scatter(start_point[0], start_point[1])
-    plt.scatter(goal_point[0], goal_point[1])
-
-    plt.gca().add_line(line1)
-    plt.gca().add_line(line2)
-    plt.gca().add_line(line3)
-    plt.gca().add_line(line4)
-    plt.gca().add_patch(circle)
-    plt.gca().add_patch(square)
-    plt.axis('scaled')
-
-    start = Node(start_point, None, 0, index(start_point))
-    goal = start.dijkstra(goal_point)
-    open('nodePath.txt', 'w').close()
-    generate_path(goal, start_point)
-
-    # Animating the explored nodes
-    file = open('Nodes.txt', 'r')
-    points = file.readlines()
-    for point in points:
-        pts = point.split(',')
-        plt.scatter(int(pts[0]), int(pts[1]), c='b')
-        # plt.pause(0.05)
-    file = open('nodePath.txt', 'r')
-    points = file.readlines()
-    for point in points:
-        pts = point.split(',')
-        plt.scatter(int(pts[0]), int(pts[1]), c='g')
-
-    plt.show()
-    """
-    # Plotting the final map
-
-    u=150.     #x-position of the center
-    v=100.    #y-position of the center
-    a=40.     #radius on the x-axis
-    b=20.    #radius on the y-axis
-
-    fig = plt.figure()
-    plt.axes()
-    circle = plt.Circle((225, 150), radius=25, fill=False)
-    line1 = plt.Line2D((0, 300), (200, 200), lw=1)
-    line2 = plt.Line2D((0, 300), (0, 0), lw=1)
-    line3 = plt.Line2D((0, 0), (0, 200), lw=1)
-    line4 = plt.Line2D((300, 300), (0, 200), lw=1)
-
-    # Lines for the diamond
-    line5 = plt.Line2D((200, 225), (30, 45), lw=1)
-    line6 = plt.Line2D((225, 250), (45, 30), lw=1)
-    line7 = plt.Line2D((250, 225), (30, 15), lw=1)
-    line8 = plt.Line2D((225, 200), (15, 30), lw=1)
-
-    # Lines for the tilted cuboid
-    line9 = plt.Line2D((95,  100), (30, 38.66), lw=1)
-    line10 = plt.Line2D((100, 35.05), (38.66, 76.16), lw=1)
-    line11 = plt.Line2D((35.05, 30.05), (76.16, 67.5), lw=1)
-    line12 = plt.Line2D((30.05, 95), (67.5, 30), lw=1)
-
-    # Lines for the concave shape
-    line13 = plt.Line2D((20,  25), (120, 185), lw=1)
-    line14 = plt.Line2D((25, 75), (185, 185), lw=1)
-    line15 = plt.Line2D((75, 100), (185, 150), lw=1)
-    line16 = plt.Line2D((100, 75), (150, 120), lw=1)
-    line17 = plt.Line2D((75,  50), (120, 150), lw=1)
-    line18 = plt.Line2D((50, 20), (150, 120), lw=1)
-
-
-    plt.gca().add_line(line1)
-    plt.gca().add_line(line2)
-    plt.gca().add_line(line3)
-    plt.gca().add_line(line4)
-    plt.gca().add_line(line5)
-    plt.gca().add_line(line6)
-    plt.gca().add_line(line7)
-    plt.gca().add_line(line8)
-    plt.gca().add_line(line9)
-    plt.gca().add_line(line10)
-    plt.gca().add_line(line11)
-    plt.gca().add_line(line12)
-    plt.gca().add_line(line13)
-    plt.gca().add_line(line14)
-    plt.gca().add_line(line15)
-    plt.gca().add_line(line16)
-    plt.gca().add_line(line17)
-    plt.gca().add_line(line18)
-    plt.gca().add_patch(circle)
-    plt.axis('scaled')
-
-    t = np.linspace(0, 2*pi, 100)
-    plt.plot( u+a*np.cos(t) , v+b*np.sin(t) )
-    plt.grid(color='lightgray',linestyle='--')
-
     start = Node(start_point, None, 0, index(start_point))
     goal = start.dijkstra(goal_point)
     open('nodePath.txt', 'w').close()
     generate_path(goal, start_point)
     end_time = time.time()
     print('Time taken to find path: ' + str(end_time - start_time))
-    # Animating the explored nodes
+    grid = np.ones((201,301,3),dtype=np.uint8)*255
+    lines = []
+    lines.append(get_line(0,0,300,0))
+    lines.append(get_line(0, 0, 0, 200))
+    lines.append(get_line(300, 0, 300, 200))
+    lines.append(get_line(0, 200, 300, 200))
+
+    lines.append(get_line(200, 30, 225, 45))
+    lines.append(get_line(225, 45, 250, 30))
+    lines.append(get_line(250, 30, 225, 15))
+    lines.append(get_line(225, 15, 200, 30))
+
+    lines.append(get_line(95, 30, 100, 38))
+    lines.append(get_line(100, 38, 35, 76))
+    lines.append(get_line(35, 76, 30, 67))
+    lines.append(get_line(30, 67, 95, 30))
+
+    lines.append(get_line(20, 120, 25, 185))
+    lines.append(get_line(25, 185, 75, 185))
+    lines.append(get_line(75, 185, 100, 150))
+    lines.append(get_line(100, 150, 75, 120))
+    lines.append(get_line(75, 120, 50, 150))
+    lines.append(get_line(50, 150, 20, 120))
+
+    circle = []
+    for i in range(200,250):
+        for j in range(125,175):
+            if (i - 225)**2 + (j - 150)**2 <= 25**2:
+                circle.append([i,j])
+    lines.append(circle)
+
+    ellipse = []
+    for i in range(110,190):
+        for j in range(80,120):
+            if (i - 150)**2/40**2 + (j - 100)**2/20**2 <= 1:
+                ellipse.append([i,j])
+    lines.append(ellipse)
+
+    # node[0]-150)**2)/a**2 + ((node[1]-100)**2)/b**2 <= 1:
+    for line in lines:
+        for l in line:
+            # print(l)
+            grid[l[1]][l[0]] = [0, 0, 0]
     file = open('Nodes.txt', 'r')
     points = file.readlines()
     for point in points:
         pts = point.split(',')
-        plt.scatter(int(pts[0]), int(pts[1]), c='b', s=1)
-        plt.pause(0.000000001)
+        grid[int(pts[1])][int(pts[0])] = [255, 0, 0]
+        cv2.imshow('graph',np.flip(grid,0))
+        cv2.waitKey(1)
     file = open('nodePath.txt', 'r')
     points = file.readlines()
     for point in points:
         pts = point.split(',')
-        plt.scatter(int(pts[0]), int(pts[1]), c='g', s=1)
-    plt.show()
+        grid[int(pts[1])][int(pts[0])] = [0, 255, 0]
+        cv2.imshow('Path', np.flip(grid, 0))
+        cv2.waitKey(1)
+    cv2.waitKey()
     graph_end_time = time.time()
     print('Time taken to animate paths: ' + str(graph_end_time - end_time))
 if __name__ == '__main__':
